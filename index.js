@@ -5,6 +5,7 @@ var timeOut = {
   unix: null,
   natural: null
 }
+var months = ['January', 'Februrary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -29,11 +30,13 @@ app.get('/', function(request, response) {
 });
 
 app.get('/*', function(request, response) {
+  timeOut.unix = null;
+  timeOut.natural = null;
   //console.log(request.baseUrl);
   console.log(request.url);
   var str = request.url;
   str = str.slice(1);
-  console.log(newStr);
+  //console.log(newStr);
   if ((/^\d+$/).test(str)) {
     console.log("is Number");
     if (parseInt(str) >= 1000) {
@@ -41,9 +44,10 @@ app.get('/*', function(request, response) {
       console.log(newStr);
     }
   }
-  else if ((/\\%+/).test(str)) {
-    var newStr = naturalTimeConvert(str);
-    console.log("contains %");
+  else if ((/\W*/).test(str)) {  //was (/\%+/)
+    var dateObj = naturalTimeConvert(str);
+    console.log("contains \\W");
+    console.log(dateObj);
 
   }
   console.log(str);
@@ -51,27 +55,13 @@ app.get('/*', function(request, response) {
   response.render('pages/timestamp')
 });
 
-// //matches only digits (not limited by quantity)
-// app.get('/\\d+$', function(request, response) {
-//   //console.log(request.baseUrl);
-//   console.log("Not Home, Unix");
-//   response.render('pages/index')
-// });
-
-// //app.get('/\[A-Za-z]+$', function(request, response) {
-// app.get('/\[A-Za-z]+$\\%\\d{4}\\,\\%\\d{6}', function(request, response) {
-//   //console.log(request.baseUrl);
-//   console.log("Not Home, Natural");
-//   response.render('pages/index')
-// });
-
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
 
 function unixTimeConvert(unixTime) {
   var a = new Date(unixTime * 1000);
-  var months = ['January', 'Februrary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  //var months = ['January', 'Februrary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   var year = a.getFullYear();
   var month = months[a.getMonth()];
   var date = a.getDate();
@@ -83,7 +73,49 @@ function unixTimeConvert(unixTime) {
 
 //convert natural time into unix, call unix time, convert
 function naturalTimeConvert(natTime) {
-  var natArr = natTime.split("%20");
+  var natArr = natTime.split(/\%\w{2}|\W/);  //was split "%20"
+  var natDate = {
+    natMonth: null,
+    natDate: null,
+    natYear: null
+  }
   console.log(natArr);
-  return timeOut;
+  for (var i = 0; i < natArr.length; i++) {
+    if ((/^\d{4}$/).test(natArr[i])) {
+      natDate.natYear = parseInt(natArr[i]);
+      console.log("year");
+    }
+    else if ((/^\d{2}$/).test(natArr[i])) {
+      natDate.natDate = parseInt(natArr[i]);
+      console.log("date");
+    }
+    else if ((/^[A-Za-z]+$/).test(natArr[i])) {
+      var tempStr = natArr[i].charAt(0).toUpperCase() + natArr[i].slice(1).toLowerCase();
+      console.log(tempStr);
+      if(months.indexOf(tempStr)){
+        natDate.natMonth = tempStr;
+        console.log("month");
+      }
+      else{
+        natDate.natMonth = "January";
+      }
+      
+    }
+  }
+  // if(natDate.natDate == null){
+  //   natDate.natDate = 1;
+  // }
+  // if(natDate.natYear == null){
+  //   natDate.natYear = 1970;
+  // }
+  // if(natDate.natMonth == null){
+  //   natDate.natMonth = "January";
+  // }
+  //var unixTime = Date.parse(toString(natDate.natDate)+'-'+natDate.natMonth.slice(0,2)+"-"+toString(natDate.natYear));
+  //var strTime = natDate.natDate+'-'+natDate.natMonth.slice(0,3)+"-"+natDate.natYear;
+  var newUnixTime = Date.parse(natDate.natDate+'-'+natDate.natMonth.slice(0,3)+"-"+natDate.natYear)/1000;
+  console.log(newUnixTime);
+  //return natDate;
+  var outConver = unixTimeConvert(newUnixTime);
+  return newUnixTime;
 }
