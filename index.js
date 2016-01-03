@@ -39,20 +39,24 @@ app.get('/*', function(request, response) {
   //console.log(newStr);
   if ((/^\d+$/).test(str)) {
     console.log("is Number");
-    if (parseInt(str) >= 1000) {
+    // if (parseInt(str) >= 1000) {
       var newStr = unixTimeConvert(parseInt(str));
       console.log(newStr);
-    }
+      response.render('pages/timestamp')
+    // }
   }
   else if ((/\W*/).test(str)) {  //was (/\%+/)
     var dateObj = naturalTimeConvert(str);
     console.log("contains \\W");
     console.log(dateObj);
+    response.render('pages/timestamp')
 
   }
+  else{
   console.log(str);
-  console.log("Not Home");
-  response.render('pages/timestamp')
+  console.log("Invalid");
+  response.render('pages/index')
+  }
 });
 
 app.listen(app.get('port'), function() {
@@ -102,17 +106,28 @@ function naturalTimeConvert(natTime) {
       
     }
   }
-  // if(natDate.natDate == null){
-  //   natDate.natDate = 1;
-  // }
-  // if(natDate.natYear == null){
-  //   natDate.natYear = 1970;
-  // }
-  // if(natDate.natMonth == null){
-  //   natDate.natMonth = "January";
-  // }
+  if(natDate.natDate == null){
+    natDate.natDate = 1;
+  }
+  if(natDate.natYear == null){
+    natDate.natYear = 1970;
+  }
+  if(natDate.natMonth == null){
+    natDate.natMonth = "January";
+    //return;
+  }
   //var unixTime = Date.parse(toString(natDate.natDate)+'-'+natDate.natMonth.slice(0,2)+"-"+toString(natDate.natYear));
   //var strTime = natDate.natDate+'-'+natDate.natMonth.slice(0,3)+"-"+natDate.natYear;
+  // for (var prop in natDate){
+  //   var propertyOk = "true";
+  //   if (natDate.prop == null){
+  //     propertyOk = "null";
+  //     console.log(natDate.prop);
+  //     //console.log(prop + " " + natDate.prop + "property status " + propertyOk);
+  //     //return;
+  //   }
+  //   console.log(prop + "property status " + propertyOk);
+  // }
   var newUnixTime = Date.parse(natDate.natDate+'-'+natDate.natMonth.slice(0,3)+"-"+natDate.natYear)/1000;
   console.log(newUnixTime);
   //return natDate;
