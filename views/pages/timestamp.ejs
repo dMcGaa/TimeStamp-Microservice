@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Timestamp Microservice</title>
+
+    <!-- CSS -->
+    <!-- load bootstrap and custom stylesheet -->
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/superhero/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="stylesheets/main.css">
+
+</head>
+<body>
+
+<div class="container">
+    <div class="jumbotron">
+        <h1>API Basejump: Timestamp Microservice</h1>
+        <% if (timeOut.unix !== null) {%>
+            <p style = "color:darkgray;">DateTime: <br><%=JSON.stringify(timeOut)%></p>
+        <% } %>
+        <p>Example Usage:</p>
+        <p>https://fierce-brook-8395.herokuapp.com/December%2015,%202015</p>
+        <p>https://fierce-brook-8395.herokuapp.com/1450137600</p>
+        <br>
+        <p>Author <a href="http://dmcgaa.com">dmcgaa.com</a></p>
+        <p></p><i>made 2016-01-02</i></p>
+    </div>
+</div>
+    
+</body>
+</html>

@@ -24,6 +24,7 @@ app.use(function(req, res, next) {
 app.get('/', function(request, response) {
   //console.log(request.baseUrl);
   console.log("Hello");
+  timeOut.unix = null;
   response.render('pages/index')
 });
 
@@ -47,7 +48,7 @@ app.get('/*', function(request, response) {
   }
   console.log(str);
   console.log("Not Home");
-  response.render('pages/index')
+  response.render('pages/timestamp')
 });
 
 // //matches only digits (not limited by quantity)
