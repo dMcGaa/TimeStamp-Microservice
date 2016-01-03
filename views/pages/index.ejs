@@ -15,8 +15,10 @@
 <div class="container">
     <div class="jumbotron">
         <h1>API Basejump: Timestamp Microservice</h1>
-        <p>DateTime: <%=JSON.stringify(timeOut)%></p>
-        <h2>Example Usage:</h2>
+        <% if (timeOut.unix !== null) {%>
+            <p style = "color:darkgray;">DateTime: <br><%=JSON.stringify(timeOut)%></p>
+        <% } %>
+        <p>Example Usage:</p>
         <p>https://fierce-brook-8395.herokuapp.com/December%2015,%202015</p>
         <p>https://fierce-brook-8395.herokuapp.com/1450137600</p>
         <br>
